@@ -12,8 +12,7 @@ const PORT = process.env.PORT|| 5000;
 
 // routes
 import userRoute from './routes/user.route.js'
-app.use('/api/v1/user',
-    userRoute) 
+app.use('/api/v1/user',userRoute) 
 
 // middleware
 import { errorMiddleware } from './middlewares/error.middleware.js';

@@ -23,11 +23,11 @@ const MessageContainer = () => {
       </div>
 
        {/*sending chatting field  */}
-      <div className='w-full  p-3 flex gap-2 '>
+      <div className='w-full p-3 flex gap-2 '>
        
-        <input type="text"  placeholder="Type here  . . ." className=" input rounded-4xl input-bordered input-primary w-full "/>
+        <input type="text"  placeholder="Type here  . . ." className=" input rounded-4xl  input-bordered input-primary w-full "/>
              
-         <button className="btn text-xl text-blue-50/60 btn-circle btn-soft  btn-primary ml-1 ">
+         <button className="btn text-xl text-blue-50/60 btn-circle  btn-soft  btn-primary ml-1 ">
          <IoIosSend />
         </button>
          
