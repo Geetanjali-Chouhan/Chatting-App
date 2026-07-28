@@ -25,6 +25,7 @@ const router = createBrowserRouter(
    element:<Signup/>
 }, 
 ])
+
 createRoot(document.getElementById('root')).render(
   // application rapping
   <Provider store={store}>
