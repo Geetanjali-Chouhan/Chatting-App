@@ -16,8 +16,8 @@
 // }; 
  
 import User from "../models/user.model.js";
-import { asyncHandler } from "../utilities/asyncHandler.utility.js";
-import { errorHandler } from "../utilities/errorHandler.utility.js";
+import { asyncHandler } from "../utilities/asyncHandler.utilities.js";
+import { errorHandler } from "../utilities/errorHandler.utilities.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 

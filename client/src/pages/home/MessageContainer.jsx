@@ -1,40 +1,52 @@
-import React from 'react'
-import User from './Users';
-import Message from './Message';
-import { IoIosSend } from "react-icons/io";
-import { MdAdd } from "react-icons/md";
+import React, { useEffect } from "react";
+import User from "./User";
+import Message from "./Message";
+import { useDispatch, useSelector } from "react-redux";
+import { getMessageThunk } from "../../store/slice/message/message.thunk";
+import SendMessage from "./SendMessage";
+
 const MessageContainer = () => {
+
+  const dispatch = useDispatch();
+  const { selectedUser } = useSelector((state) => state.userReducer);
+  const { messages } = useSelector((state) => state.messageReducer);
+
+  useEffect(() => {
+    if (selectedUser?._id) {
+      dispatch(getMessageThunk({ recieverId: selectedUser?._id }));
+    }
+  }, [selectedUser]);
+
   return (
-    <div className=' w-full h-screen  flex flex-col bg-[#0e1e2470] '>
-      {/* user */}
-      <div className=' p-3 border-b border-b-white/10'>
-         <User/>
-      </div>
-      
-      {/* message */}
-      <div className='h-full overflow-y-auto p-3'>
-        <Message/>
-        <Message/>
-        <Message/>
-        <Message/>
-        <Message/>
-        <Message/>
-        <Message/>
-      </div>
+    <>
+      {!selectedUser ? (
+        <div className="w-full flex items-center justify-center flex-col gap-5">
+          <h2>Welcome to GUP SHUP</h2>
+          <p className="text-xl">Please select a person to continue your chat!!</p>
+          </div>
+      ) : (
+        <div className="h-screen w-full flex flex-col">
+          <div className="p-3 border-b border-b-white/10">
+            <User userDetails={selectedUser} />
+          </div>
 
-       {/*sending chatting field  */}
-      <div className='w-full p-3 flex gap-2 '>
-       
-        <input type="text"  placeholder="Type here  . . ." className=" input rounded-4xl  input-bordered input-primary w-full "/>
-             
-         <button className="btn text-xl text-blue-50/60 btn-circle  btn-soft  btn-primary ml-1 ">
-         <IoIosSend />
-        </button>
-         
-      </div>
-      
-    </div>
-  )
-}
+          <div className="h-full overflow-y-auto p-3">
+            {messages?.map((messageDetails) => {
+              return (
+                <Message
+                  key={messageDetails?._id}
+                  messageDetails={messageDetails}
+                />
+              );
+            })}
+          </div>
 
-export default MessageContainer
+          <SendMessage />
+
+        </div>
+      )}
+    </>
+  );
+};
+
+export default MessageContainer;

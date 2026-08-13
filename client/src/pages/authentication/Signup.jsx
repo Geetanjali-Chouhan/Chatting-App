@@ -1,105 +1,132 @@
-import React, { useState } from 'react'
-import { RiMapPinUserFill } from "react-icons/ri";
-import { MdOutlineLockPerson } from "react-icons/md";
-import { MdOutlineCancel } from "react-icons/md";
-import { Link } from "react-router-dom";
-const Signup = () => {
+import React, { useEffect, useState } from "react";
+import { FaUser } from "react-icons/fa";
+import { IoKeySharp } from "react-icons/io5";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { registerUserThunk } from "../../store/slice/user/user.thunk";
+import toast from "react-hot-toast";
 
-  
-    const [signupData,setSignupData]= useState({
-      username:"",
-      password:"",
-      confirmPassword:"",
-    })
-    
-   const handleInputChange =(e)=>{
-   
-    setSignupData({
-      ...signupData,
-      [e.target.name]:e.target.value
-      }
-    );
-    console.log(signupData)
-   }
+const Signup = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { isAuthenticated } = useSelector((state) => state.userReducer);
+  const [signupData, setSignupData] = useState({
+    fullName: "",
+    username: "",
+    password: "",
+    confirmPassword: "",
+    gender: "male",
+  });
+
+  useEffect(() => {
+    if (isAuthenticated) navigate("/");
+  }, [isAuthenticated]);
+
+  const handleInputChange = (e) => {
+    setSignupData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleSignup = async () => {
+    if (signupData.password !== signupData.confirmPassword) {
+      return toast.error("Password and confirm password do not match");
+    }
+    const response = await dispatch(registerUserThunk(signupData));
+    if (response?.payload?.success) {
+      navigate("/");
+    }
+  };
 
   return (
-    
+    <div className="flex justify-center items-center p-6 min-h-screen">
+      <div className="max-w-[40rem] w-full flex flex-col gap-5 bg-base-200 p-6 rounded-lg">
+        <h2 className="text-2xl font-semibold">Please Signup..!!</h2>
 
-<div className='flex justify-center p-6 items-center min-h-screen '>
- <div className='  max-w-100   w-full flex flex-col gap-3 bg-base-300 p-6 rounded-3xl'>
-     <span className='text-white flex gap-35 '>
-       <h2 className=' text-white/80  text-3xl ml-3 text-center font-bold'>Signup</h2> 
-         <span className='text-2xl ml-20'>
-          <Link to ='/'>{<MdOutlineCancel />}</Link>
-         </span>
-     </span>
+        <label className="input input-bordered flex items-center gap-2">
+          <FaUser />
+          <input
+            type="text"
+            name="fullName"
+            className="grow"
+            placeholder="Full Name"
+            onChange={handleInputChange}
+          />
+        </label>
 
-  <div className='mt-3 '>
-    {/* username input field */}
-    <label className="input validator">
-      <input type="text"required
-      placeholder="Username"
-      name='username'
-      onChange={handleInputChange}
-      pattern="[A-Za-z][A-Za-z0-9\-]*"
-      minLength="3"
-      maxLength="30"
-      title="Only letters, numbers or dash"/>
-      <RiMapPinUserFill />
-    </label>
-    <div className="validator-hint">
+        <label className="input input-bordered flex items-center gap-2">
+          <FaUser />
+          <input
+            type="text"
+            name="username"
+            className="grow"
+            placeholder="Username"
+            onChange={handleInputChange}
+          />
+        </label>
+
+        <label className="input input-bordered flex items-center gap-2">
+          <IoKeySharp />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            className="grow"
+            onChange={handleInputChange}
+          />
+        </label>
+
+        <label className="input input-bordered flex items-center gap-2">
+          <IoKeySharp />
+          <input
+            type="password"
+            name="confirmPassword"
+            placeholder="Confirm Password"
+            className="grow"
+            onChange={handleInputChange}
+          />
+        </label>
+
+        <div className="input input-bordered flex items-center gap-5">
+          <label htmlFor="male" className="flex gap-3 items-center">
+            <input
+              id="male"
+              type="radio"
+              name="gender"
+              value="male"
+              className="radio radio-primary"
+              onChange={handleInputChange}
+            />
+            male
+          </label>
+
+          <label htmlFor="female" className="flex gap-3 items-center">
+            <input
+              id="female"
+              type="radio"
+              name="gender"
+              value="female"
+              className="radio radio-primary"
+              onChange={handleInputChange}
+            />
+            female
+          </label>
+        </div>
+
+        <button onClick={handleSignup} className="btn btn-primary">
+          Signup
+        </button>
+
+        <p>
+          Already have an account? &nbsp;
+          <Link to="/login" className="text-blue-400 underline">
+            Login
+          </Link>
+        </p>
+      </div>
     </div>
+  );
+};
 
-    {/* password field */}
-    <label className="input validator">
-     <input
-     type="password"
-     required
-     placeholder="Password"
-     name='password'
-     onChange={handleInputChange}
-     minLength="8"
-     pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-     title="Must be more than 8 characters, including number, lowercase letter, uppercase letter"/>
-     <MdOutlineLockPerson />
-    </label>
-     <p className="validator-hint hidden">
-     Must be more than 8 characters, including
-     <br />At least one number <br />At least one lowercase letter 
-     <br />At least one uppercase letter
-     </p>
-
-    {/* confirm password field */}
-    <label className="input validator mt-3">
-     <input
-     type="password"
-     required
-     placeholder="Confirm Password"
-     name='confirmPassword'
-     onChange={(e)=>handleInputChange(e)}
-     minLength="8"
-     pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-     title="Must be more than 8 characters, including number, lowercase letter, uppercase letter"/>
-     <MdOutlineLockPerson />
-    </label>
-     <p className="validator-hint hidden">
-     Must be more than 8 characters, including
-     <br />At least one number <br />At least one lowercase letter 
-     <br />At least one uppercase letter
-     </p>
-  </div>
-
-
-     <button className="text-grey text-lg mr-8 font-serifbold bg-[#2272a7] btn btn-active">Signup</button>
-
-     <p className='text-gray-400'>Already have an account?
-        <Link to ='/login'className='text-blue-400 underline'>  Login</Link>
-     </p>
-
- </div>  
-</div>
-  
- )
-}
-
-export default Signup
+export default Signup;
