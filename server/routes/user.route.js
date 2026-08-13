@@ -1,4 +1,3 @@
-
 import express from "express";
 import { getOtherUsers, getProfile, login, logout, register } from "../controllers/user.controller.js";
 import { isAuthenticated } from "../middlewares/auth.middlware.js";
