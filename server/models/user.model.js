@@ -11,6 +11,12 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    email: {
+      type: String,
+      sparse: true,
+      trim: true,
+      lowercase: true,
+    },
     password: {
       type: String,
       required: true,
@@ -22,6 +28,22 @@ const userSchema = new mongoose.Schema(
     avatar: {
       type: String,
       required: true,
+    },
+    otp: {
+      type: String,
+      default: null,
+    },
+    otpExpires: {
+      type: Date,
+      default: null,
+    },
+    resetPasswordOtp: {
+      type: String,
+      default: null,
+    },
+    resetPasswordExpires: {
+      type: Date,
+      default: null,
     },
   },
   { timestamps: true }

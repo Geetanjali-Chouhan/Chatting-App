@@ -1,7 +1,7 @@
 import Message from "../models/message.model.js";
 import Conversation from "../models/conversation.model.js";
-import { asyncHandler } from "../utilities/asyncHandler.utility.js";
-import { errorHandler } from "../utilities/errorHandler.utility.js";
+import { asyncHandler } from "../utilities/asyncHandler.utilities.js";
+import { errorHandler } from "../utilities/errorHandler.utilities.js";
 import {getSocketId, io} from '../socket/socket.js'
 
 export const sendMessage = asyncHandler(async (req, res, next) => {
@@ -35,8 +35,11 @@ export const sendMessage = asyncHandler(async (req, res, next) => {
   }
 
   // socket.io
-  const socketId = getSocketId(receiverId)
-  io.to(socketId).emit("newMessage", newMessage);
+  const socketId = getSocketId(receiverId);
+  if (socketId) {
+    io.to(socketId).emit("newMessage", newMessage);
+  }
+  io.to(receiverId.toString()).emit("newMessage", newMessage);
 
   res.status(200).json({
     success: true,
@@ -52,6 +55,27 @@ export const getMessages = asyncHandler(async (req, res, next) => {
     return next(new errorHandler("All fields are required", 400));
   }
 
+  // Mark all unread messages from otherParticipantId to me as seen
+  const updateResult = await Message.updateMany(
+    {
+      senderId: otherParticipantId,
+      receiverId: myId,
+      seen: false,
+    },
+    {
+      $set: { seen: true, seenAt: new Date() },
+    }
+  );
+
+  if (updateResult.modifiedCount > 0) {
+    const senderSocketId = getSocketId(otherParticipantId);
+    if (senderSocketId) {
+      io.to(senderSocketId).emit("messagesSeen", {
+        readerId: myId.toString(),
+      });
+    }
+  }
+
   let conversation = await Conversation.findOne({
     participants: { $all: [myId, otherParticipantId] },
   }).populate("messages");
@@ -59,5 +83,39 @@ export const getMessages = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
     responseData: conversation,
+  });
+});
+
+export const markMessagesAsSeen = asyncHandler(async (req, res, next) => {
+  const myId = req.user._id;
+  const senderId = req.params.senderId;
+
+  if (!myId || !senderId) {
+    return next(new errorHandler("All fields are required", 400));
+  }
+
+  const updateResult = await Message.updateMany(
+    {
+      senderId,
+      receiverId: myId,
+      seen: false,
+    },
+    {
+      $set: { seen: true, seenAt: new Date() },
+    }
+  );
+
+  if (updateResult.modifiedCount > 0) {
+    const senderSocketId = getSocketId(senderId);
+    if (senderSocketId) {
+      io.to(senderSocketId).emit("messagesSeen", {
+        readerId: myId.toString(),
+      });
+    }
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "Messages marked as seen",
   });
 });

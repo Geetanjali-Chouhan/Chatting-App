@@ -15,6 +15,21 @@ export const messageSlice = createSlice({
       const oldMessages = state.messages ?? [];
       state.messages = [...oldMessages, action.payload];
     },
+    markAllSeenForUser: (state, action) => {
+      const { readerId } = action.payload;
+      if (state.messages && Array.isArray(state.messages)) {
+        state.messages = state.messages.map((msg) => {
+          const recId =
+            typeof msg.receiverId === "object"
+              ? msg.receiverId?._id
+              : msg.receiverId;
+          if (recId?.toString() === readerId?.toString()) {
+            return { ...msg, seen: true, seenAt: new Date().toISOString() };
+          }
+          return msg;
+        });
+      }
+    },
   },
   extraReducers: (builder) => {
     // send message
@@ -44,6 +59,6 @@ export const messageSlice = createSlice({
   },
 });
 
-export const {setNewMessage} = messageSlice.actions;
+export const { setNewMessage, markAllSeenForUser } = messageSlice.actions;
 
 export default messageSlice.reducer;
