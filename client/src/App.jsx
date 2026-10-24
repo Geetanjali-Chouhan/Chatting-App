@@ -20,13 +20,12 @@ function App() {
         reverseOrder={false}
         toastOptions={{
           style: {
-            background: "rgba(15, 23, 42, 0.95)",
-            color: "#f8fafc",
-            border: "1px solid rgba(255, 255, 255, 0.1)",
+            background: "#341b52",
+            color: "#ffffff",
+            border: "1px solid rgba(255, 255, 255, 0.15)",
             borderRadius: "14px",
-            fontSize: "14px",
-            boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.5)",
-            backdropFilter: "blur(12px)",
+            fontSize: "13.5px",
+            boxShadow: "0 8px 30px rgba(52, 27, 82, 0.3)",
           },
         }}
       />
