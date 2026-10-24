@@ -44,16 +44,16 @@ const SendMessage = () => {
   };
 
   return (
-    <div className="p-3 sm:p-4 bg-slate-900/80 backdrop-blur-xl border-t border-white/10">
+    <div className="p-3 sm:p-4 bg-white border-t border-slate-200">
       <form
         onSubmit={handleSendMessage}
         className="flex items-center gap-2 max-w-5xl mx-auto"
       >
-        <div className="glass-input flex-1 rounded-2xl px-4 py-3 flex items-center">
+        <div className="flex-1 rounded-2xl px-4 py-3 flex items-center bg-slate-100 border border-slate-200 focus-within:border-[#2AABEE] focus-within:bg-white transition-all">
           <input
             type="text"
             placeholder={`Message ${selectedUser?.fullName ? `@${selectedUser.fullName}` : "..."}`}
-            className="w-full bg-transparent outline-none text-sm text-white placeholder-slate-400"
+            className="w-full bg-transparent outline-none text-sm text-slate-800 placeholder-slate-400"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             autoFocus
@@ -63,7 +63,7 @@ const SendMessage = () => {
         <button
           type="submit"
           disabled={!message.trim() || buttonLoading}
-          className="w-12 h-12 rounded-2xl flex-shrink-0 flex items-center justify-center bg-gradient-to-r from-indigo-500 via-indigo-600 to-purple-600 hover:from-indigo-600 hover:to-purple-700 active:scale-95 text-white shadow-lg shadow-indigo-500/25 transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+          className="w-12 h-12 rounded-full flex-shrink-0 flex items-center justify-center bg-[#2AABEE] hover:bg-[#229ED9] active:scale-95 text-white shadow-md shadow-blue-400/25 transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
           title="Send message"
         >
           <IoSend className="text-lg translate-x-0.5" />

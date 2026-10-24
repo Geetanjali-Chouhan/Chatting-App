@@ -1,8 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 import io from "socket.io-client";
 
+// Store socket OUTSIDE Redux state to avoid Immer proxy breaking it
+let _socket = null;
+
+export const getSocket = () => _socket;
+
 const initialState = {
-  socket: null,
+  isConnected: false,
   onlineUsers: [],
 };
 
@@ -11,19 +16,20 @@ export const socketSlice = createSlice({
   initialState,
   reducers: {
     initializeSocket: (state, action) => {
-      if (state.socket) {
+      // Disconnect any existing socket
+      if (_socket) {
         try {
-          state.socket.disconnect();
+          _socket.disconnect();
         } catch (e) {
           console.error("Error disconnecting previous socket:", e);
         }
       }
-      const socket = io(import.meta.env.VITE_DB_ORIGIN, {
+      _socket = io(import.meta.env.VITE_DB_ORIGIN, {
         query: {
           userId: action.payload,
         },
       });
-      state.socket = socket;
+      state.isConnected = true;
     },
 
     setOnlineUsers: (state, action) => {
@@ -31,14 +37,15 @@ export const socketSlice = createSlice({
     },
 
     closeSocket: (state) => {
-      if (state.socket) {
+      if (_socket) {
         try {
-          state.socket.disconnect();
+          _socket.disconnect();
         } catch (e) {
           console.error("Error closing socket:", e);
         }
       }
-      state.socket = null;
+      _socket = null;
+      state.isConnected = false;
       state.onlineUsers = [];
     },
   },

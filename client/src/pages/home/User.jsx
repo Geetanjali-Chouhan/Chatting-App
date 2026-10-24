@@ -74,12 +74,12 @@ const User = ({ userDetails, isHeader = false }) => {
     };
   }, [lastMsg?.message, userDetails?._id, userProfile?._id]);
 
-  // Header presentation mode
+  // Header presentation mode - Telegram style light theme
   if (isHeader) {
     return (
       <div className="flex items-center gap-3.5">
         <div className="relative">
-          <div className="w-11 h-11 rounded-full overflow-hidden ring-2 ring-indigo-500/30 bg-slate-800">
+          <div className="w-11 h-11 rounded-full overflow-hidden ring-2 ring-[#2AABEE]/30 bg-slate-100">
             <img
               src={userDetails?.avatar || `https://api.dicebear.com/7.x/bottts/svg?seed=${userDetails?.username}`}
               alt={userDetails?.fullName}
@@ -87,16 +87,16 @@ const User = ({ userDetails, isHeader = false }) => {
             />
           </div>
           {isUserOnline && (
-            <span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-white border-2 border-slate-900 rounded-full shadow-sm shadow-white/80" />
+            <span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-white rounded-full shadow-sm" />
           )}
         </div>
         <div>
           <div className="flex items-center gap-2">
-            <h2 className="text-base font-semibold text-white leading-tight">
+            <h2 className="text-base font-semibold text-slate-800 leading-tight">
               {userDetails?.fullName}
             </h2>
             <span
-              className="hidden sm:inline-flex items-center gap-1 text-[10px] text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded-full border border-amber-400/20 font-medium select-none"
+              className="hidden sm:inline-flex items-center gap-1 text-[10px] text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200 font-medium select-none"
               title="Messages are end-to-end encrypted. No third party can read them."
             >
               <IoLockClosed className="text-[10px]" /> E2EE
@@ -104,12 +104,12 @@ const User = ({ userDetails, isHeader = false }) => {
           </div>
           <div className="flex items-center gap-1.5 mt-0.5">
             {isUserOnline && (
-              <span className="w-2 h-2 rounded-full bg-white shadow-sm shadow-white/80" />
+              <span className="w-2 h-2 rounded-full bg-emerald-500" />
             )}
-            <span className="text-xs text-slate-400 font-medium">
+            <span className={`text-xs font-medium ${isUserOnline ? "text-emerald-600" : "text-slate-400"}`}>
               {isUserOnline ? "Online" : "Offline"}
             </span>
-            <span className="text-xs text-slate-500">•</span>
+            <span className="text-xs text-slate-300">•</span>
             <span className="text-xs text-slate-400">@{userDetails?.username}</span>
           </div>
         </div>

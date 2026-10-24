@@ -59,60 +59,50 @@ const Message = ({ messageDetails }) => {
     }
   })();
 
-  const avatarUrl = isMe
-    ? userProfile?.avatar || `https://api.dicebear.com/7.x/bottts/svg?seed=${userProfile?.username}`
-    : selectedUser?.avatar || `https://api.dicebear.com/7.x/bottts/svg?seed=${selectedUser?.username}`;
-
   return (
     <div
       ref={messageRef}
-      className={`flex items-end gap-2.5 my-1.5 transition-all duration-200 ${
+      className={`flex items-end gap-2 my-0.5 transition-all duration-200 ${
         isMe ? "flex-row-reverse" : "flex-row"
       }`}
     >
-      {/* Avatar */}
-      <div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 ring-1 ring-white/10 bg-slate-800">
-        <img
-          src={avatarUrl}
-          alt="Avatar"
-          className="w-full h-full object-cover"
-        />
-      </div>
-
-      {/* Message bubble + time */}
+      {/* Message bubble - Telegram style: green for sent, white for received */}
       <div className={`flex flex-col max-w-[75%] sm:max-w-[65%] ${isMe ? "items-end" : "items-start"}`}>
         <div
-          className={`px-4 py-2.5 text-sm leading-relaxed break-words transition-all duration-200 relative ${
+          className={`px-3.5 py-2 text-sm leading-relaxed break-words relative ${
             isMe
-              ? "bg-gradient-to-r from-indigo-600 via-indigo-600 to-purple-600 text-white rounded-2xl rounded-br-xs shadow-md shadow-indigo-900/30"
-              : "bg-slate-800/90 text-slate-100 border border-white/5 rounded-2xl rounded-bl-xs shadow-md shadow-black/20"
+              ? "bg-[#EFFDDE] text-slate-800 rounded-2xl rounded-br-sm shadow-sm"
+              : "bg-white text-slate-800 rounded-2xl rounded-bl-sm shadow-sm"
           }`}
+          style={{
+            boxShadow: '0 1px 2px rgba(0,0,0,0.08)',
+          }}
         >
           <div className="pr-1">{displayText}</div>
 
           <div
-            className={`flex items-center gap-1 justify-end mt-1 -mb-0.5 text-[10px] select-none ${
-              isMe ? "text-indigo-200/90" : "text-slate-400"
+            className={`flex items-center gap-1 justify-end mt-0.5 -mb-0.5 text-[10px] select-none ${
+              isMe ? "text-green-700/70" : "text-slate-400"
             }`}
           >
             <span>{formattedTime}</span>
 
-            {/* WhatsApp Tick Marks for Sent Messages */}
+            {/* Telegram Tick Marks for Sent Messages */}
             {isMe && (
               <span className="flex items-center text-sm ml-0.5">
                 {messageDetails?.seen ? (
                   <IoCheckmarkDoneSharp
-                    className="text-sky-400 filter drop-shadow-[0_0_2px_rgba(56,189,248,0.5)] transition-all duration-300"
+                    className="text-green-600 transition-all duration-300"
                     title="Seen (Read)"
                   />
                 ) : isReceiverOnline ? (
                   <IoCheckmarkDoneSharp
-                    className="text-slate-300/80 transition-all duration-300"
+                    className="text-slate-400 transition-all duration-300"
                     title="Delivered"
                   />
                 ) : (
                   <IoCheckmarkSharp
-                    className="text-slate-300/80 transition-all duration-300"
+                    className="text-slate-400 transition-all duration-300"
                     title="Sent"
                   />
                 )}

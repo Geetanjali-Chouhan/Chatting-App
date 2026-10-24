@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   initializeSocket,
   setOnlineUsers,
+  getSocket,
 } from "../../store/slice/socket/socket.slice";
 import {
   setNewMessage,
@@ -21,7 +22,7 @@ const Home = () => {
   const { isAuthenticated, userProfile, selectedUser } = useSelector(
     (state) => state.userReducer
   );
-  const { socket } = useSelector((state) => state.socketReducer);
+  const { isConnected } = useSelector((state) => state.socketReducer);
 
   const selectedUserRef = useRef(selectedUser);
   const userProfileRef = useRef(userProfile);
@@ -40,13 +41,15 @@ const Home = () => {
   }, [isAuthenticated, userProfile?._id, dispatch]);
 
   useEffect(() => {
+    const socket = getSocket();
     if (selectedUser?._id && socket) {
       socket.emit("markMessagesSeen", { senderId: selectedUser._id });
       dispatch(resetUserUnreadCount(selectedUser._id));
     }
-  }, [selectedUser, socket, dispatch]);
+  }, [selectedUser, isConnected, dispatch]);
 
   useEffect(() => {
+    const socket = getSocket();
     if (!socket) return;
 
     // Immediately ask server for current online users
@@ -94,7 +97,7 @@ const Home = () => {
       socket.off("newMessage");
       socket.off("messagesSeen");
     };
-  }, [socket, dispatch]);
+  }, [isConnected, dispatch]);
 
   return (
     <div className="h-screen w-full flex overflow-hidden bg-[#0b0f19]">

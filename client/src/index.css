@@ -72,3 +72,18 @@ body {
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
 }
 
+/* Telegram-style chat area light scrollbar */
+.bg-\[\#c8d9e6\]::-webkit-scrollbar,
+[style*="background-color: rgb(200, 217, 230)"]::-webkit-scrollbar {
+  width: 6px;
+}
+.bg-\[\#c8d9e6\]::-webkit-scrollbar-track,
+[style*="background-color: rgb(200, 217, 230)"]::-webkit-scrollbar-track {
+  background: transparent;
+}
+.bg-\[\#c8d9e6\]::-webkit-scrollbar-thumb,
+[style*="background-color: rgb(200, 217, 230)"]::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 9999px;
+}
+
